@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
-import { FaLinkedin, FaGithub, FaEnvelope, FaMoon, FaSun,FaBriefcase, FaGraduationCap,FaFlask,FaCode,FaBullhorn,FaStar,FaUniversity,FaBook,FaLaptopCode,FaTrophy,FaArrowRight,FaHeart,FaPaintBrush,FaCamera,FaMusic,FaHandHoldingHeart,FaDownload,FaPaperPlane } from "react-icons/fa";
+import { FaChalkboardTeacher,FaBrain,FaExternalLinkAlt, FaLinkedin, FaGithub, FaEnvelope, FaMoon, FaSun,FaBriefcase, FaGraduationCap,FaFlask,FaCode,FaBullhorn,FaStar,FaUniversity,FaBook,FaLaptopCode,FaTrophy,FaArrowRight,FaHeart,FaPaintBrush,FaCamera,FaMusic,FaHandHoldingHeart,FaDownload,FaPaperPlane } from "react-icons/fa";
 import profileImage from "./image1.jpeg";
 
 export default function Portfolio() {
@@ -24,6 +24,20 @@ export default function Portfolio() {
       location: "Mumbai, India",
       period: "January 2025 – Present",
       icon: <FaFlask />
+    },
+    {
+      title: "Machine Learning Intern",
+      company: "Capital Quants Solutions",
+      location: "Mumbai, India",
+      period: "July 2025 – August 2025",
+      icon: <FaBrain />
+    },
+    {
+      title: "Teaching Assistant",
+      company: "Sardar Patel Institute of Technology",
+      location: "Mumbai, India",
+      period: "Feb 2025 – Present",
+      icon: <FaChalkboardTeacher />
     },
     {
       title: "Software Development Intern",
@@ -52,7 +66,7 @@ export default function Portfolio() {
       degree: "Bachelor of Technology in Computer Engineering",
       institution: "Sardar Patel Institute of Technology",
       period: "2022 – 2026",
-      gpa: "9.1 CGPA (till now)",
+      gpa: "9.22 CGPA (till now)",
       icon: <FaUniversity />
     },
     {
@@ -70,6 +84,46 @@ export default function Portfolio() {
       icon: <FaUniversity />
     }
   ];
+  const publications = [
+  
+  {
+    title: "Authentic Fingerprint Reconstruction via Wavelet-ATME with Super-Resolution Verification",
+    venue: "Under Review – IEEE Transactions on Information Forensics and Security (TIFS)",
+    year: "2025",
+    authors: "Deekshant Kumar, Prasham, Prathamesh, Vineet, Areeb, Isha Bamel, Purav, Priyanshu, Vikram Gadre, Nitin Nakadi",
+    link: "",
+    
+    type: "Journal (Under Review)"
+  },
+  {
+    title: "Comparative Analysis of Transformer Models for Skin Lesion Detection",
+    venue: "4th IEEE International Conference on  Computer Vision and Machine Intelligence (CVMI), NIT Rourkela",
+    year: "2025",
+    authors: "Isha Bamel, Purav Ahya, Dr. Rupali Sawant",
+    link: "",
+    certificate: "/CVMI.jpg",
+    type: "Conference Paper"
+  },
+  {
+    title: "Comparative Analysis of Optimized ML and Deep Learning Models for Credit Risk Prediction",
+    venue: "1st IEEE International Conference on Data Science and Intelligent Network Computing (ICDSINC), NIT Raipur",
+    year: "2025",
+    authors: "Isha Bamel, Purav Ahya, Prof. Siddhartha Chandra",
+    link: "",
+    certificate: "/ICDSINC.pdf",
+    type: "Conference Paper"
+  },
+  {
+    title: "Hybrid Optimization and Explainability-Driven Framework for Creditworthiness Assessment",
+    venue: "4th IEEE International Conference on Advancement in Technology (ICONAT)",
+    year: "2025",
+    authors: "Purav Ahya, Isha Bamel, Prof. Siddhartha Chandra",
+    link: "", // replace if available
+    certificate: "/ICONAT.pdf",
+    type: "Conference Paper"
+  }
+];
+
 
   return (
     <div className={`min-h-screen ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"} transition-colors duration-500`}>
@@ -160,8 +214,8 @@ export default function Portfolio() {
 
   {/* Resume download button */}
   <motion.a
-    href="/Isha_Bamel_SDE_Resume.pdf" 
-    download="Isha_Bamel_SDE_Resume.pdf"
+    href="/IshaBamel_Research_Resume.pdf" 
+    download="IshaBamel_Research_Resume.pdf"
     className={`px-6 py-3 rounded-full font-medium text-white ${darkMode ? "bg-gradient-to-r from-blue-500 to-purple-600" : "bg-gradient-to-r from-blue-600 to-purple-700"} shadow-lg hover:shadow-xl`}
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
@@ -542,6 +596,86 @@ export default function Portfolio() {
           ))}
         </div>
       </motion.section>
+      {/* Publications Section */}
+<motion.section
+  initial={{ opacity: 0 }}
+  whileInView={{ opacity: 1 }}
+  transition={{ duration: 0.8 }}
+  viewport={{ once: true }}
+  className="py-20 px-5 max-w-5xl mx-auto"
+>
+  <h2 className="text-3xl font-bold mb-12 text-center">Publications</h2>
+
+  <div className="space-y-8">
+    {publications.map((paper, index) => (
+      <motion.div
+        key={index}
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ delay: index * 0.15, duration: 0.5 }}
+        viewport={{ once: true }}
+        className={`relative overflow-visible p-6 rounded-lg shadow-lg ${
+    darkMode ? "bg-gray-800" : "bg-white"
+  }`}
+      >
+        <h3 className="text-lg font-bold mb-1">{paper.title}</h3>
+
+        <p className={`text-sm font-medium ${
+          darkMode ? "text-blue-400" : "text-blue-600"
+        }`}>
+          {paper.venue} • {paper.year}
+        </p>
+
+        <p className="text-sm opacity-80 mt-1">
+  {paper.authors.split(", ").map((author, idx) => (
+    <span
+      key={idx}
+      className={author === "Isha Bamel" ? "font-semibold" : ""}
+    >
+      {author}
+      {idx !== paper.authors.split(", ").length - 1 && ", "}
+    </span>
+  ))}
+</p>
+
+        <div className="flex items-center justify-between mt-4">
+          <span className={`text-xs px-3 py-1 rounded-full ${
+            darkMode ? "bg-purple-900/30 text-purple-300" : "bg-purple-100 text-purple-800"
+          }`}>
+            {paper.type}
+          </span>
+
+          {paper.link && (
+            <a
+              href={paper.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`text-sm font-medium flex items-center gap-1 ${
+                darkMode ? "text-blue-400" : "text-blue-600"
+              }`}
+            >
+              View Paper <FaArrowRight />
+            </a>
+          )}
+          {paper.certificate && (
+    <a
+      href={paper.certificate}
+      target="_blank"
+      rel="noopener noreferrer"
+      title="Presentation Certificate"
+      className={`absolute top-4 right-4 text-xs
+    ${darkMode ? "text-gray-400 hover:text-green-400" : "text-gray-500 hover:text-green-600"}
+    transition`}
+    >
+      <FaExternalLinkAlt />
+    </a>
+  )}
+        </div>
+      </motion.div>
+    ))}
+  </div>
+</motion.section>
+
       {/* Projects Section */}
       <motion.section 
   initial={{ opacity: 0 }}
