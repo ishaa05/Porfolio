@@ -123,6 +123,34 @@ export default function Portfolio() {
     type: "Conference Paper"
   }
 ];
+const achievements = [
+  {
+    title: "Barclays Hack-O-Hire 2024",
+    subtitle: "Finalist",
+    description: "Top 24 teams nationwide out of 1200+.",
+  },
+  {
+    title: "Hacktoberfest 2025",
+    subtitle: "Super Contributor",
+    description: "Major contributions to tldr-pages (60k+ stars).",
+  },
+  {
+    title: "GSSoC’24",
+    subtitle: "Open Source Contributor",
+    description: "Bug fixes, features, and documentation.",
+  },
+  {
+    title: "GSSoC’25",
+    subtitle: "Mentor",
+    description: "Guided contributors on PRs, Git, and OSS practices.",
+  },
+  {
+    title: "Student Mentor",
+    subtitle: "Academic & Career",
+    description: "Mentored 2nd-year undergraduates.",
+  }
+];
+
 
 
   return (
@@ -675,6 +703,51 @@ export default function Portfolio() {
     ))}
   </div>
 </motion.section>
+{/* Achievements Section */}
+<motion.section
+  initial={{ opacity: 0 }}
+  whileInView={{ opacity: 1 }}
+  transition={{ duration: 0.8 }}
+  viewport={{ once: true }}
+  className="py-20 px-5 max-w-6xl mx-auto"
+>
+  <h2 className="text-3xl font-bold mb-12 text-center">Achievements</h2>
+
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    {achievements.map((item, index) => (
+      <motion.div
+        key={index}
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ delay: index * 0.1, duration: 0.4 }}
+        viewport={{ once: true }}
+        whileHover={{ y: -8 }}
+        className={`relative p-5 rounded-lg shadow-lg cursor-default transition-all duration-300
+    ${darkMode ? "bg-gray-800" : "bg-white"}
+    hover:bg-gradient-to-br hover:from-blue-500/5 hover:to-purple-500/5`}
+      >
+        <div className="flex items-start justify-between mb-2">
+          <h3 className="text-lg font-semibold leading-snug">
+            {item.title}
+          </h3>
+          <span
+            className={`text-xs px-2 py-1 rounded-full whitespace-nowrap
+              ${darkMode
+                ? "bg-blue-900/40 text-blue-300"
+                : "bg-blue-100 text-blue-700"}`}
+          >
+            {item.subtitle}
+          </span>
+        </div>
+
+        <p className="text-sm opacity-80">
+          {item.description}
+        </p>
+      </motion.div>
+    ))}
+  </div>
+</motion.section>
+
 
       {/* Projects Section */}
       <motion.section 
