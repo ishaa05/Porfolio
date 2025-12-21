@@ -6,7 +6,12 @@ import profileImage from "./image1.jpeg";
 export default function Portfolio() {
   const [darkMode, setDarkMode] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
+const scrollToSection = (id) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
   // Track mouse position for parallax effect
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -150,6 +155,15 @@ const achievements = [
     description: "Mentored 2nd-year undergraduates.",
   }
 ];
+const navItems = [
+  { label: "About", id: "about" },
+  { label: "Experience", id: "experience" },
+  { label: "Education", id: "education" },
+  { label: "Projects", id: "projects" },
+  { label: "Publications", id: "publications" },
+  { label: "Achievements", id: "achievements" },
+  { label: "Contact", id: "contact" },
+];
 
 
 
@@ -184,30 +198,49 @@ const achievements = [
       </div>
 
       {/* Navbar */}
-      <motion.nav 
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ type: "spring", stiffness: 100 }}
-        className="p-5 flex justify-between items-center backdrop-blur-sm bg-opacity-80 sticky top-0 z-10"
+      <motion.nav
+  initial={{ y: -100 }}
+  animate={{ y: 0 }}
+  transition={{ type: "spring", stiffness: 100 }}
+  className="p-5 flex justify-between items-center backdrop-blur-sm bg-opacity-80 sticky top-0 z-50"
+>
+  <motion.h1
+    className="text-2xl font-bold cursor-pointer"
+    whileHover={{ scale: 1.05 }}
+    onClick={() => scrollToSection("hero")}
+  >
+    Isha Bamel
+  </motion.h1>
+
+  <div className="hidden md:flex items-center gap-6">
+    {navItems.map((item) => (
+      <button
+        key={item.id}
+        onClick={() => scrollToSection(item.id)}
+        className={`text-sm font-medium transition-colors
+          ${darkMode
+            ? "text-gray-300 hover:text-white"
+            : "text-gray-700 hover:text-black"
+          }`}
       >
-        <motion.h1 
-          className="text-2xl font-bold" 
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          Isha Bamel
-        </motion.h1>
-        <div className="flex items-center gap-4">
-          <motion.button 
-            onClick={() => setDarkMode(!darkMode)} 
-            className={`p-2 rounded-full ${darkMode ? "bg-yellow-400 text-gray-900" : "bg-gray-800 text-white"}`}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-          >
-            {darkMode ? <FaSun /> : <FaMoon />}
-          </motion.button>
-        </div>
-      </motion.nav>
+        {item.label}
+      </button>
+    ))}
+
+    {/* Dark mode toggle */}
+    <motion.button
+      onClick={() => setDarkMode(!darkMode)}
+      className={`ml-2 p-2 rounded-full ${
+        darkMode ? "bg-yellow-400 text-gray-900" : "bg-gray-800 text-white"
+      }`}
+      whileHover={{ scale: 1.1 }}
+      whileTap={{ scale: 0.9 }}
+    >
+      {darkMode ? <FaSun /> : <FaMoon />}
+    </motion.button>
+  </div>
+</motion.nav>
+
 
       {/* Hero Section */}
 <motion.div 
@@ -288,7 +321,7 @@ const achievements = [
   </motion.div>
 </motion.div>
       {/* About Me Section */}
-<motion.section
+<motion.section id="about"
   initial={{ opacity: 0 }}
   whileInView={{ opacity: 1 }}
   transition={{ duration: 0.8 }}
@@ -494,7 +527,7 @@ const achievements = [
   </div>
 </motion.section>
        {/* Education Section */}
-       <motion.section
+       <motion.section id="education"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
@@ -565,7 +598,7 @@ const achievements = [
         </div>
       </motion.section>
 {/* Experience Section */}
-<motion.section 
+<motion.section id="experience"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
@@ -625,7 +658,7 @@ const achievements = [
         </div>
       </motion.section>
       {/* Publications Section */}
-<motion.section
+<motion.section id="publications"
   initial={{ opacity: 0 }}
   whileInView={{ opacity: 1 }}
   transition={{ duration: 0.8 }}
@@ -704,7 +737,7 @@ const achievements = [
   </div>
 </motion.section>
 {/* Achievements Section */}
-<motion.section
+<motion.section id="achievements"
   initial={{ opacity: 0 }}
   whileInView={{ opacity: 1 }}
   transition={{ duration: 0.8 }}
@@ -750,7 +783,7 @@ const achievements = [
 
 
       {/* Projects Section */}
-      <motion.section 
+      <motion.section id="projects"
   initial={{ opacity: 0 }}
   whileInView={{ opacity: 1 }}
   transition={{ duration: 0.8 }}
