@@ -3,12 +3,19 @@ import { useState, useEffect, useRef } from "react";
 import { FaChalkboardTeacher, FaBrain, FaExternalLinkAlt, FaLinkedin, FaGithub, FaEnvelope, FaMoon, FaSun, FaBriefcase, FaGraduationCap, FaFlask, FaCode, FaBullhorn, FaStar, FaUniversity, FaBook, FaLaptopCode, FaTrophy, FaArrowRight, FaHeart, FaPaintBrush, FaCamera, FaMusic, FaHandHoldingHeart, FaDownload, FaPaperPlane, FaUser } from "react-icons/fa";
 import ibAvatar from "./assets/ib-avatar.svg";
 import Pic from "./assets/image1.jpeg";
+import { SiGooglescholar } from "react-icons/si";
 const profileImage = ibAvatar;
 const profilepic = ibAvatar;
 // Placeholder for profile image - replace with your actual image
 // import profileImage from "./image1.jpeg";
 //const profileImage = ibAvatar; // Set this to your image path when ready
-
+const ScholarIcon = () => (
+  <img 
+    src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/googlescholar.svg"
+    alt="Google Scholar"
+    className="w-6 h-6 opacity-80 group-hover:opacity-100 transition"
+  />
+);
 // Animated Particle Component
 const Particle = ({ x, y, delay, size, color, subtle = false }) => {
   return (
@@ -387,7 +394,7 @@ export default function Portfolio() {
       venue: "4th IEEE International Conference on  Computer Vision and Machine Intelligence (CVMI), NIT Rourkela",
       year: "2025",
       authors: "Isha Bamel, Purav Ahya, Dr. Rupali Sawant",
-      link: "",
+      link: "https://ieeexplore.ieee.org/abstract/document/11337532",
       certificate: "/CVMI.jpg",
       type: "Conference Paper"
     },
@@ -405,7 +412,7 @@ export default function Portfolio() {
       venue: "4th IEEE International Conference on Advancement in Technology (ICONAT)",
       year: "2025",
       authors: "Purav Ahya, Isha Bamel, Prof. Siddhartha Chandra",
-      link: "",
+      link: "https://ieeexplore.ieee.org/document/11362576",
       certificate: "/ICONAT.pdf",
       type: "Conference Paper"
     }
@@ -709,6 +716,7 @@ export default function Portfolio() {
             Download Resume <FaDownload className="inline-block" />
           </span>
         </motion.a>
+        
 
         {/* Social Links */}
         <motion.div
@@ -717,10 +725,12 @@ export default function Portfolio() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8, duration: 0.6 }}
         >
+          
           {[
             { icon: <FaLinkedin />, href: "https://www.linkedin.com/in/isha-bamel-b13916292/", color: "text-blue-500", name: "LinkedIn" },
             { icon: <FaGithub />, href: "https://github.com/ishaa05", color: darkMode ? "text-white" : "text-gray-800", name: "GitHub" },
-            { icon: <FaEnvelope />, href: "mailto:isha.bamel22@gmail.com", color: "text-red-500", name: "Email" }
+            { icon: <FaEnvelope />, href: "mailto:isha.bamel22@gmail.com", color: "text-red-500", name: "Email" },
+             { icon: <FaGraduationCap />, href: "https://scholar.google.com/citations?user=WYshoBgAAAAJ&hl=en", color: darkMode ?  "text-white/80 hover:text-white" : "text-gray-700 hover:text-black", name: "Google Scholar" }
           ].map((social, index) => (
             <motion.a
               key={index}
