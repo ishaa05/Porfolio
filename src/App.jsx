@@ -2,6 +2,17 @@ import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 import { FaChalkboardTeacher, FaBrain, FaExternalLinkAlt, FaLinkedin, FaGithub, FaEnvelope, FaMoon, FaSun, FaBriefcase, FaGraduationCap, FaFlask, FaCode, FaBullhorn, FaStar, FaUniversity, FaBook, FaLaptopCode, FaTrophy, FaArrowRight, FaHeart, FaPaintBrush, FaCamera, FaMusic, FaHandHoldingHeart, FaDownload, FaPaperPlane, FaUser } from "react-icons/fa";
 import ibAvatar from "./assets/ib-avatar.svg";
+import {
+  FaReact, FaJava, FaHtml5, FaCss3Alt, FaJs, FaPython, FaGitAlt, FaDocker
+} from "react-icons/fa";
+
+import {
+  SiTypescript, SiMongodb, SiFlask, SiSpringboot,
+  SiTensorflow, SiPytorch, SiOpencv,
+  SiPostman, SiStreamlit
+} from "react-icons/si";
+import { FaAws } from "react-icons/fa";
+import { FaMapMarkerAlt, FaFileAlt } from "react-icons/fa";
 import Pic from "./assets/image1.jpeg";
 import { SiGooglescholar } from "react-icons/si";
 const profileImage = ibAvatar;
@@ -9,6 +20,79 @@ const profilepic = ibAvatar;
 // Placeholder for profile image - replace with your actual image
 // import profileImage from "./image1.jpeg";
 //const profileImage = ibAvatar; // Set this to your image path when ready
+const GITHUB_USERNAME = "ishaa05"; 
+
+const LANG_COLORS = {
+  JavaScript: "#f7df1e", TypeScript: "#3178c6", Python: "#3572A5",
+  Java: "#b07219", CSS: "#563d7c", HTML: "#e34c26", C: "#555555",
+  "C++": "#f34b7d", Go: "#00ADD8", Rust: "#dea584", Shell: "#89e051",
+  default: "#5b7fff",
+};
+
+const SKILLS = [
+  {
+    label: "Development",
+    dot: "#3b82f6",
+    glow: "rgba(59,130,246,0.6)",
+    variant: "blue",
+    skills: [
+      { icon: <FaReact />, name: "React" },
+      { icon: <SiTypescript />, name: "TypeScript" },
+      { icon: <SiMongodb />, name: "MERN Stack" },
+      { icon: <FaPython />, name: "Python" },
+      { icon: <SiFlask />, name: "Flask" },
+      { icon: <SiSpringboot />, name: "Spring Boot" },
+      { icon: <FaJava />, name: "Java" },
+      { icon: <FaHtml5 />, name: "HTML" },
+      { icon: <FaCss3Alt />, name: "CSS" },
+      { icon: <FaJs />, name: "JavaScript" },
+    ],
+  },
+  {
+    label: "AI & Intelligence",
+    dot: "#8b5cf6",
+    glow: "rgba(139,92,246,0.6)",
+    variant: "violet",
+    skills: [
+      { icon: <FaPython />, name: "Machine Learning" },
+      { icon: <SiTensorflow />, name: "TensorFlow" },
+      { icon: <SiPytorch />, name: "PyTorch" },          // ⭐ added
+      { icon: <SiOpencv />, name: "OpenCV" },            // ⭐ added
+      { icon: <FaReact />, name: "Computer Vision" },
+    ],
+  },
+  {
+    label: "Tooling",
+    dot: "#10b981",
+    glow: "rgba(16,185,129,0.5)",
+    variant: "emerald",
+    skills: [
+      { icon: <FaGitAlt />, name: "Git" },
+      { icon: <FaDocker />, name: "Docker" },
+      { icon: <FaAws />, name: "AWS" },           // ⭐ added
+      { icon: <SiStreamlit />, name: "Streamlit" },     // ⭐ added
+      { icon: <SiPostman />, name: "Postman" },
+    ],
+  },
+];
+
+const chipStyles = {
+  blue:   { dark: "bg-blue-500/10 border-blue-500/20 text-blue-300 hover:bg-blue-500/[0.16] hover:border-blue-400/45", light: "bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100 hover:border-blue-400", icon: { dark: "bg-blue-500/20", light: "bg-blue-100" } },
+  violet: { dark: "bg-purple-500/10 border-purple-500/20 text-purple-300 hover:bg-purple-500/[0.16] hover:border-purple-400/45", light: "bg-purple-50 border-purple-200 text-purple-700 hover:bg-purple-100 hover:border-purple-400", icon: { dark: "bg-purple-500/20", light: "bg-purple-100" } },
+  emerald:{ dark: "bg-emerald-500/10 border-emerald-500/20 text-emerald-300 hover:bg-emerald-500/[0.14] hover:border-emerald-400/40", light: "bg-emerald-50 border-emerald-200 text-emerald-700 hover:bg-emerald-100 hover:border-emerald-400", icon: { dark: "bg-emerald-500/20", light: "bg-emerald-100" } },
+};
+
+function Skeleton({ w = "60px", h = "24px" }) {
+  return (
+    <div
+      className="rounded animate-pulse"
+      style={{ width: w, height: h, background: "rgba(255,255,255,0.06)" }}
+    />
+  );
+}
+
+
+
 const ScholarIcon = () => (
   <img 
     src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/googlescholar.svg"
@@ -273,6 +357,77 @@ const GlowingButton = ({ children, onClick, className = "" }) => {
 };
 
 export default function Portfolio() {
+    const [ghData, setGhData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+  async function load() {
+    try {
+      const [userRes, reposRes, eventsRes] = await Promise.all([
+        fetch(`https://api.github.com/users/${GITHUB_USERNAME}`),
+        fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100&sort=updated`),
+        fetch(`https://api.github.com/users/${GITHUB_USERNAME}/events/public?per_page=30`),
+      ]);
+
+      const user = await userRes.json();
+      const repos = await reposRes.json();
+      const events = await eventsRes.json();
+
+      // ⭐ total stars
+      const totalStars = Array.isArray(repos)
+        ? repos.reduce((s, r) => s + (r.stargazers_count || 0), 0)
+        : 0;
+
+      // 🧠 languages
+      const langMap = {};
+      if (Array.isArray(repos)) {
+        repos.forEach((r) => {
+          if (r.language) {
+            langMap[r.language] = (langMap[r.language] || 0) + 1;
+          }
+        });
+      }
+
+      const topLangs = Object.entries(langMap)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 6);
+
+      // 📊 push activity
+      const pushDays = {};
+      if (Array.isArray(events)) {
+        events.forEach((e) => {
+          if (e.type === "PushEvent") {
+            const d = e.created_at.slice(0, 10);
+            pushDays[d] =
+              (pushDays[d] || 0) + (e.payload?.commits?.length || 1);
+          }
+        });
+      }
+
+      setGhData({ user, totalStars, topLangs, pushDays });
+
+    } catch {
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  load();
+}, []);
+
+  const statCards = ghData
+    ? [
+        { val: ghData.user.public_repos ?? "—", label: "Public Repos", color: "from-blue-400 to-blue-500" },
+        { val: ghData.user.followers ?? "—", label: "Followers", color: "from-purple-400 to-pink-400" },
+        { val: ghData.totalStars > 999 ? `${Math.round(ghData.totalStars / 100) / 10}k` : ghData.totalStars, label: "Total Stars", color: "from-emerald-400 to-blue-400" },
+        { val: ghData.user.following ?? "—", label: "Following", color: "from-orange-400 to-pink-400" },
+      ]
+    : null;
+
+  const pushEntries = ghData ? Object.entries(ghData.pushDays).sort() : [];
+  const maxPush = pushEntries.length ? Math.max(...pushEntries.map(([, v]) => v), 1) : 1;
   const [darkMode, setDarkMode] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [scrollY, setScrollY] = useState(0);
@@ -563,458 +718,471 @@ export default function Portfolio() {
       </motion.nav>
 
       {/* Hero Section */}
+      {/* Hero Section */}
+<motion.div
+  id="hero"
+  ref={heroRef}
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ duration: 1 }}
+  className="grid md:grid-cols-2 gap-12 items-center h-screen p-10 relative"
+>
+
+  {/* LEFT COLUMN */}
+  <motion.div
+    initial={{ opacity: 0, x: -50 }}
+    whileInView={{ opacity: 1, x: 0 }}
+    transition={{ duration: 0.6 }}
+    viewport={{ once: true }}
+    className="space-y-6 flex flex-col items-center md:items-center"
+  >
+
+    {/* Profile */}
+    <div className="relative mx-auto md:mx-0 w-60">
+
+      {/* Orbit ring */}
       <motion.div
-        id="hero"
-        ref={heroRef}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1 }}
-        className="flex flex-col items-center justify-center min-h-screen text-center p-5 relative z-10"
-      >
-        {/* Animated Profile Image */}
-        <motion.div
-          initial={{ scale: 0, rotate: -180 }}
-          animate={{ scale: 1, rotate: 0 }}
-          transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.2 }}
-          className="mb-8 relative"
-        >
-          <motion.div
-            className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 blur-2xl opacity-50"
-            animate={{
-              rotate: [0, 360],
-              scale: [1, 1.2, 1],
-            }}
-            transition={{
-              rotate: { duration: 20, repeat: Infinity, ease: "linear" },
-              scale: { duration: 3, repeat: Infinity, ease: "easeInOut" },
-            }}
-          />
-          {profileImage ? (
-            <motion.img
-              src={profileImage}
-              alt="Isha Bamel"
-              className="relative w-48 h-48 rounded-full object-cover border-4 border-white shadow-2xl"
-              whileHover={{ scale: 1.1, rotate: 5 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            />
-          ) : (
-            <motion.div
-              className="relative w-48 h-48 rounded-full border-4 border-white shadow-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center"
-              whileHover={{ scale: 1.1, rotate: 5 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              <FaUser className="text-6xl text-white opacity-80" />
-            </motion.div>
-          )}
-        </motion.div>
+        className="absolute inset-0 rounded-full border-[1.5px] border-dashed border-blue-400/40"
+        style={{ inset: "-20px" }}
+        animate={{ rotate: 360 }}
+        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+      />
 
-        {/* Animated Name */}
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.7, delay: 0.3 }}
-          className="mb-6"
-        >
-          <motion.h2
-            className="text-5xl md:text-7xl font-extrabold mb-4 relative"
-            whileHover={{ scale: 1.02 }}
-          >
-            <span className={`bg-clip-text text-transparent bg-gradient-to-r ${
-              darkMode ? "from-blue-400 via-purple-500 to-pink-500" : "from-blue-600 via-purple-600 to-pink-600"
-            }`}>
-              Hi, I am{" "}
-            </span>
-            <motion.span
-              className={`inline-block font-extrabold bg-clip-text text-transparent bg-gradient-to-r ${
-                darkMode 
-                  ? "from-blue-400 via-purple-500 to-pink-500" 
-                  : "from-blue-600 via-purple-600 to-pink-600"
-              }`}
-              style={{
-                backgroundImage: darkMode
-                  ? "linear-gradient(90deg, #60a5fa, #a78bfa, #f472b6, #60a5fa)"
-                  : "linear-gradient(90deg, #2563eb, #9333ea, #ec4899, #2563eb)",
-                backgroundSize: "200% 100%",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-              animate={{
-                backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-              }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                ease: "linear",
-              }}
-            >
-              Isha Bamel!
-            </motion.span>
-          </motion.h2>
-        </motion.div>
-
-        {/* Animated Description */}
-        <motion.p
-          className="text-xl md:text-2xl max-w-2xl mb-8 font-light"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.6 }}
-        >
-          Passionate{" "}
-          <motion.span
-            className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-500"
-            animate={{ opacity: [0.7, 1, 0.7] }}
-            transition={{ duration: 2, repeat: Infinity }}
-          >
-            full stack development
-          </motion.span>{" "}
-          enthusiast exploring the power of{" "}
-          <motion.span
-            className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500"
-            animate={{ opacity: [0.7, 1, 0.7] }}
-            transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
-          >
-            Machine Learning
-          </motion.span>{" "}
-          and{" "}
-          <motion.span
-            className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-red-500"
-            animate={{ opacity: [0.7, 1, 0.7] }}
-            transition={{ duration: 2, repeat: Infinity, delay: 1 }}
-          >
-            Deep Learning
-          </motion.span>{" "}
-          to build impactful solutions.
-        </motion.p>
-
-        {/* Resume download button */}
-        <motion.a
-          href="/IshaBamel_Research_Resume.pdf"
-          download="IshaBamel_Research_Resume.pdf"
-          className="relative px-8 py-4 rounded-full font-medium text-white overflow-hidden group"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7, duration: 0.6 }}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600"
-            animate={{
-              backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-            }}
-            transition={{
-              duration: 3,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-            style={{
-              backgroundSize: "200% 200%",
-            }}
-          />
-          <span className="relative z-10 flex items-center gap-2">
-            Download Resume <FaDownload className="inline-block" />
-          </span>
-        </motion.a>
-        
-
-        {/* Social Links */}
-        <motion.div
-          className="flex gap-8 mt-10 mb-20 relative z-10"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8, duration: 0.6 }}
-        >
+      {/* Top Badge */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true }}
+        animate={{ y: [-6, 6] }}
+        transition={{
+          duration: 0.5,
           
-          {[
-            { icon: <FaLinkedin />, href: "https://www.linkedin.com/in/isha-bamel-b13916292/", color: "text-blue-500", name: "LinkedIn" },
-            { icon: <FaGithub />, href: "https://github.com/ishaa05", color: darkMode ? "text-white" : "text-gray-800", name: "GitHub" },
-            { icon: <FaEnvelope />, href: "mailto:isha.bamel22@gmail.com", color: "text-red-500", name: "Email" },
-             { icon: <FaGraduationCap />, href: "https://scholar.google.com/citations?user=WYshoBgAAAAJ&hl=en", color: darkMode ?  "text-white/80 hover:text-white" : "text-gray-700 hover:text-black", name: "Google Scholar" }
-          ].map((social, index) => (
-            <motion.a
-              key={index}
-              href={social.href}
-              className={`text-5xl ${social.color} relative group`}
-              whileHover={{ scale: 1.3, rotate: [0, -10, 10, -10, 0], y: -5 }}
-              whileTap={{ scale: 0.9 }}
-              
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.9 + index * 0.1, type: "spring", stiffness: 300 }}
-            >
-              {social.icon}
-              <motion.span
-                className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs opacity-0 group-hover:opacity-100 whitespace-nowrap z-20"
-                initial={{ y: -10 }}
-                whileHover={{ y: 0 }}
-              >
-                {social.name}
-              </motion.span>
-            </motion.a>
-          ))}
-        </motion.div>
-
-        {/* Scroll Indicator */}
-        <motion.div
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center z-10"
-          animate={{ y: [0, 10, 0] }}
-          transition={{ repeat: Infinity, duration: 1.5 }}
-        >
-          <p className="text-sm opacity-60 mb-2">Scroll Down</p>
-          <motion.div
-            className="w-1 h-8 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full"
-            animate={{ height: [8, 16, 8] }}
-            transition={{ repeat: Infinity, duration: 1.5 }}
-          />
-        </motion.div>
+          ease: "easeOut"
+        }}
+        className={`absolute -top-2 -right-3 z-20 flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold shadow-lg backdrop-blur-md border ${
+          darkMode
+            ? "bg-gray-900/80 border-blue-500/30 text-blue-300"
+            : "bg-white/90 border-blue-200 text-blue-700"
+        }`}
+      >
+        <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+        Open to Research Roles
       </motion.div>
+
+      {/* Bottom Badge */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true }}
+        className={`absolute bottom-2 left-2 z-20 px-3 py-1 rounded-full text-xs font-semibold shadow-lg backdrop-blur-md border ${
+          darkMode
+            ? "bg-gray-900/80 border-purple-500/30 text-purple-300"
+            : "bg-white/90 border-purple-200 text-purple-700"
+        }`}
+      >
+        ✦ ML + Computer Vision
+      </motion.div>
+
+      {/* Glow */}
+      <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 opacity-20 blur-2xl scale-110" />
+
+      {/* Image */}
+      <motion.div
+        whileHover={{ scale: 1.03 }}
+        className={`relative z-10 rounded-2xl overflow-hidden border-2 ${
+          darkMode ? "border-blue-500/40" : "border-blue-200"
+        } shadow-2xl`}
+      >
+        <img
+          src={Pic}
+          alt="Isha Bamel"
+          className="w-full h-64 object-cover"
+        />
+      </motion.div>
+    </div>
+
+    {/* Identity Card */}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      viewport={{ once: true }}
+      className={`rounded-2xl p-5 border backdrop-blur-sm max-w-xs ${
+        darkMode
+          ? "bg-gray-800/50 border-gray-700/60"
+          : "bg-white/70 border-gray-200"
+      }`}
+    >
+      <h3 className={`text-lg font-bold ${darkMode ? "text-white" : "text-gray-900"}`}>
+        Isha Bamel
+      </h3>
+      <p className="text-sm bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent font-medium">
+        CS Undergrad · ML & Computer Vision
+      </p>
+
+      <div className={`h-px my-4 ${darkMode ? "bg-gray-700" : "bg-gray-100"}`} />
+
+      <div className="flex flex-wrap gap-2 justify-center md:justify-start">
+        {[
+          { icon: <FaMapMarkerAlt />, label: "Mumbai, IN" },
+          { icon: <FaFileAlt />, label: "IEEE Published Researcher" },
+          { icon:<FaFlask />, label: "Research Intern @ IIT Bombay" },
+        ].map(({ icon, label }) => (
+          <span
+            key={label}
+            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs ${
+              darkMode
+                ? "bg-gray-700/70 text-gray-300"
+                : "bg-gray-100 text-gray-600"
+            }`}
+          >
+            {icon} {label}
+          </span>
+        ))}
+      </div>
+    </motion.div>
+  </motion.div>
+
+  {/* RIGHT COLUMN */}
+  <div className="text-center md:text-left">
+
+    {/* Heading */}
+    <motion.h2
+      className="text-5xl md:text-7xl font-extrabold mb-4"
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+    >
+      <span className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
+        Hi, I am Isha Bamel!
+      </span>
+    </motion.h2>
+
+    {/* Description */}
+    <motion.p
+      className="text-xl md:text-2xl mb-8 font-light max-w-xl"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+    >
+      Undergraduate researcher building machine learning and computer vision systems for real-world impact.
+    </motion.p>
+
+    {/* Button */}
+    <motion.a
+      href="/IshaBamel_Research_Resume.pdf"
+      className="inline-block px-8 py-4 rounded-full text-white bg-gradient-to-r from-blue-600 to-purple-600"
+      whileHover={{ scale: 1.05 }}
+    >
+      Download Resume
+    </motion.a>
+    {/* Social Links */}
+<motion.div
+  className="flex gap-6 mt-8 justify-center md:justify-start"
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ delay: 0.5 }}
+>
+  {[
+    { icon: <FaLinkedin />, href: "https://www.linkedin.com/in/isha-bamel-b13916292/", color: "text-blue-500", name: "LinkedIn" },
+    { icon: <FaGithub />, href: "https://github.com/ishaa05", color: darkMode ? "text-white" : "text-gray-800", name: "GitHub" },
+    { icon: <FaEnvelope />, href: "mailto:isha.bamel22@gmail.com", color: "text-red-500", name: "Email" },
+    { icon: <FaGraduationCap />, href: "https://scholar.google.com/citations?user=WYshoBgAAAAJ&hl=en", color: darkMode ? "text-white/80" : "text-gray-700", name: "Scholar" }
+  ].map((social, index) => (
+    <motion.a
+      key={index}
+      href={social.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`text-3xl ${social.color} relative group`}
+      whileHover={{ scale: 1.2, y: -3 }}
+      whileTap={{ scale: 0.9 }}
+    >
+      {social.icon}
+
+      {/* Tooltip */}
+      <span className="absolute -bottom-7 left-1/2 -translate-x-1/2 text-xs opacity-0 group-hover:opacity-100 whitespace-nowrap">
+        {social.name}
+      </span>
+    </motion.a>
+    
+  ))}
+  
+</motion.div>
+
+  </div>
+  {/* Scroll Indicator */}
+  <motion.div
+    className="absolute bottom-16 left-1/2 -translate-x-1/2 flex flex-col items-center z-20"
+    animate={{ y: [-6, 6] }}
+    transition={{
+      duration: 1.5,
+      repeat: Infinity,
+      repeatType: "mirror",
+      ease: "easeInOut"
+    }}
+  >
+    <p className="text-sm opacity-60 mb-2">Scroll Down</p>
+
+    <motion.div
+      className="w-1 h-8 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full"
+      animate={{ height: [8, 16] }}
+      transition={{
+        duration: 1.5,
+        repeat: Infinity,
+        repeatType: "mirror",
+        ease: "easeInOut"
+      }}
+    />
+    </motion.div>
+
+</motion.div>
+
 
       {/* About Me Section */}
       <motion.section
-        id="about"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-        viewport={{ once: true, margin: "-100px" }}
-        className={`py-24 px-6 relative z-10 ${darkMode ? "bg-gray-900/20" : "bg-gray-50/20"} backdrop-blur-sm`}
-      >
-        <div className="max-w-5xl mx-auto relative z-10">
-          <div className="mb-16 text-center">
-            <motion.span
-              initial={{ opacity: 0, y: 20 }}
+      id="about"
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      transition={{ duration: 0.8 }}
+      viewport={{ once: true, margin: "-100px" }}
+      className="py-24 px-6 md:px-[5vw] relative z-10 overflow-hidden"
+    >
+      <div className="max-w-4xl mx-auto">
+
+        {/* Eyebrow */}
+        <motion.div
+          initial={{ opacity: 0, x: -16 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
+          className="flex items-center gap-3 mb-4"
+        >
+          <span className={`w-7 h-px ${darkMode ? "bg-blue-500" : "bg-blue-600"}`} />
+          <span className={`text-[11px] font-medium tracking-[0.22em] uppercase ${darkMode ? "text-blue-400" : "text-blue-600"}`}>
+            Who I Am
+          </span>
+        </motion.div>
+
+        {/* Headline */}
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55, delay: 0.08 }}
+          viewport={{ once: true }}
+          className={`font-extrabold leading-[1.05] tracking-[-0.03em] mb-3 ${darkMode ? "text-slate-100" : "text-slate-900"}`}
+          style={{ fontSize: "clamp(34px,5vw,58px)" }}
+        >
+          Building things that{" "}
+          <span className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
+            think &amp; scale.
+          </span>
+        </motion.h2>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ delay: 0.15 }}
+          viewport={{ once: true }}
+          className={`text-[14px] leading-[1.75] max-w-xl mb-12 ${darkMode ? "text-slate-400" : "text-slate-500"}`}
+        >
+          CS undergraduate working at the intersection of machine learning and systems, with experience in computer vision, biometrics and real-world ML deployment.
+        </motion.p>
+
+        {/* ── Skills ── */}
+        <div className="mb-14 flex flex-col gap-6">
+          {SKILLS.map(({ label, dot, glow, variant, skills }, gi) => (
+            <motion.div
+              key={gi}
+              initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              viewport={{ once: true }}
-              className={`inline-block px-4 py-1 rounded-full text-sm font-medium mb-3 ${
-                darkMode ? "bg-blue-900/30 text-blue-300" : "bg-blue-100 text-blue-800"
-              }`}
-            >
-              Who I Am
-            </motion.span>
-            <motion.h2
-              className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
+              transition={{ delay: gi * 0.08 }}
               viewport={{ once: true }}
             >
-              About Me
-            </motion.h2>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            {/* Left Column - Photo and Quick Stats */}
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-              className="space-y-8"
-            >
-              {/* Profile Image with Gradient Border */}
-              <div className="relative mx-auto md:mx-0 max-w-sm">
-                <motion.div
-                  className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${
-                    darkMode ? "from-blue-500 to-purple-600" : "from-blue-400 to-purple-500"
-                  } blur-sm opacity-70`}
-                  animate={{
-                    rotate: [0, 5, -5, 0],
-                    scale: [1, 1.05, 1],
-                  }}
-                  transition={{
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                />
-                <motion.div
-                  className={`relative rounded-2xl overflow-hidden border-4 ${
-                    darkMode ? "border-gray-800" : "border-white"
-                  } shadow-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center min-h-[300px]`}
-                  whileHover={{ scale: 1.05, rotate: 2 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
-                  {profileImage ? (
-                    <img
-                      src={Pic}
-                      alt="Developer Portrait"
-                      className="w-full h-auto object-cover"
-                    />
-                  ) : (
-                    <FaUser className="text-8xl text-white opacity-80" />
-                  )}
-                </motion.div>
+              <div className="flex items-center gap-2 mb-3">
+                <span className="w-1.5 h-1.5 rounded-full" style={{ background: dot, boxShadow: `0 0 5px ${glow}` }} />
+                <span className={`text-[10px] font-semibold tracking-[0.18em] uppercase ${darkMode ? "text-slate-600" : "text-slate-400"}`}>
+                  {label}
+                </span>
               </div>
-
-              {/* Hobbies Section */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.3 }}
-                viewport={{ once: true }}
-                className={`p-5 rounded-xl ${
-                  darkMode ? "bg-gray-800/70" : "bg-white"
-                } shadow-lg border-2 ${
-                  darkMode ? "border-purple-900/30" : "border-purple-200"
-                }`}
-              >
-                <h3 className={`text-xl font-bold mb-4 flex items-center gap-2 ${
-                  darkMode ? "text-blue-400" : "text-blue-600"
-                }`}>
-                  <motion.span
-                    animate={{ rotate: [0, 10, -10, 0] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  >
-                    <FaHeart className="text-lg" />
-                  </motion.span>{" "}
-                  Beyond Coding
-                </h3>
-
-                <div className="space-y-3">
-                  <p>
-                    In my free time, I enjoy <span className="font-bold">painting, reading, and learning photography</span>.
-                    I am also passionate about <span className="font-bold">reading tech and astrophysics articles</span>,
-                    volunteering for meaningful causes, and playing <span className="font-bold">flute</span> as a creative escape.
-                  </p>
-
-                  <div className="flex flex-wrap gap-2 pt-3">
-                    {["Painting", "Photography", "Flute", "Astrophysics", "Volunteering", "Reading"].map((hobby, idx) => (
-                      <motion.span
-                        key={idx}
-                        className={`px-3 py-1 rounded-full text-sm flex items-center gap-1 ${
-                          darkMode
-                            ? "bg-purple-900/30 text-purple-300"
-                            : "bg-purple-100 text-purple-800"
-                        }`}
-                        whileHover={{ scale: 1.1, y: -2 }}
-                        initial={{ opacity: 0, scale: 0 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: idx * 0.1 }}
-                        viewport={{ once: true }}
-                      >
-                        {idx === 0 ? <FaPaintBrush className="text-xs" /> :
-                          idx === 1 ? <FaCamera className="text-xs" /> :
-                            idx === 2 ? <FaMusic className="text-xs" /> :
-                              idx === 3 ? <FaStar className="text-xs" /> :
-                                idx === 4 ? <FaHandHoldingHeart className="text-xs" /> :
-                                  <FaBook className="text-xs" />}
-                        {hobby}
-                      </motion.span>
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-            </motion.div>
-
-            {/* Right Column - Bio and Skills */}
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              viewport={{ once: true }}
-              className="space-y-8"
-            >
-              {/* Bio */}
-              <div className={`p-6 rounded-xl ${
-                darkMode ? "bg-gray-800/70" : "bg-white"
-              } shadow-lg border-2 ${
-                darkMode ? "border-blue-900/30" : "border-blue-200"
-              }`}>
-                <div className="space-y-4 text-lg">
-                  <motion.p
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    transition={{ delay: 0.1 }}
-                    viewport={{ once: true }}
-                  >
-                    I am a passionate <span className="font-bold">Computer Engineering Undergrad</span> with expertise in{" "}
-                    <span className={`font-bold ${
-                      darkMode ? "text-blue-400" : "text-blue-600"
-                    }`}>MERN stack, Flask, Machine Learning, and Deep Learning</span>.
-                  </motion.p>
-                  <motion.p
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    transition={{ delay: 0.2 }}
-                    viewport={{ once: true }}
-                  >
-                    I enjoy building innovative and impactful solutions, especially in{" "}
-                    <span className="font-bold">AI-driven applications and full-stack development</span>. I specialize in designing{" "}
-                    <span className="font-bold">scalable and efficient software solutions</span>, ensuring seamless user experiences and robust system architectures.
-                  </motion.p>
-                  <motion.p
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    transition={{ delay: 0.3 }}
-                    viewport={{ once: true }}
-                  >
-                    My work spans across <span className="font-bold">building dynamic web applications, developing intelligent models, and integrating cutting-edge technologies</span> to drive innovation.
-                  </motion.p>
-                  <motion.p
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    transition={{ delay: 0.4 }}
-                    viewport={{ once: true }}
-                  >
-                    Beyond coding, I have actively contributed to <span className="font-bold">open-source projects</span>, led{" "}
-                    <span className="font-bold">technical initiatives</span>, and participated in and organized{" "}
-                    <span className="font-bold">hackathons</span>, achieving recognition such as being a{" "}
-                    <span className={`font-bold ${
-                      darkMode ? "text-blue-400" : "text-blue-600"
-                    }`}>Finalist at Barclays Hack-O-Hire 2024</span>.
-                  </motion.p>
-                </div>
-              </div>
-
-              {/* Skills */}
-              <div className="space-y-6">
-                <h3 className="text-xl font-bold">Technical Expertise</h3>
-
-                {[
-                  { category: "Development", skills: ["MERN Stack", "Flask", "JavaScript", "Python", "TypeScript", "React", "Java", "C", "HTML", "CSS", "Spring Boot"] },
-                  { category: "AI & ML", skills: ["Machine Learning", "Deep Learning", "Computer Vision", "TensorFlow"] },
-                  { category: "Tools & Others", skills: ["Git", "Docker", "Postman"] }
-                ].map((skillGroup, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    viewport={{ once: true }}
-                    className="space-y-2"
-                  >
-                    <h4 className={`text-sm font-medium uppercase ${
-                      darkMode ? "text-gray-400" : "text-gray-600"
-                    }`}>
-                      {skillGroup.category}
-                    </h4>
-                    <div className="flex flex-wrap gap-2">
-                      {skillGroup.skills.map((skill, idx) => (
-                        <motion.span
-                          key={idx}
-                          className={`px-3 py-1 rounded-full text-sm ${
-                            darkMode
-                              ? "bg-blue-900/30 text-blue-300 hover:bg-blue-800/50"
-                              : "bg-blue-100 text-blue-800 hover:bg-blue-200"
-                          } transition-colors duration-300 cursor-pointer`}
-                          whileHover={{ scale: 1.1, y: -2 }}
-                          initial={{ opacity: 0, scale: 0 }}
-                          whileInView={{ opacity: 1, scale: 1 }}
-                          transition={{ delay: (index * 0.1) + (idx * 0.05) }}
-                          viewport={{ once: true }}
-                        >
-                          {skill}
-                        </motion.span>
-                      ))}
-                    </div>
-                  </motion.div>
-                ))}
+              <div className="flex flex-wrap gap-2">
+                {skills.map(({ icon, name }, si) => {
+                  const s = chipStyles[variant];
+                  return (
+                    <motion.span
+                      key={si}
+                      initial={{ opacity: 0, scale: 0.85 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: gi * 0.05 + si * 0.035, type: "spring", stiffness: 200 }}
+                      whileHover={{ y: -3 }}
+                      viewport={{ once: true }}
+                      className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-[10px] text-[13px] font-medium border transition-all duration-150 cursor-default ${darkMode ? s.dark : s.light}`}
+                    >
+                      <span className={`w-5 h-5 rounded-[5px] flex items-center justify-center text-[10px] flex-shrink-0 ${darkMode ? s.icon.dark : s.icon.light}`}>
+                        {icon}
+                      </span>
+                      {name}
+                    </motion.span>
+                  );
+                })}
               </div>
             </motion.div>
-          </div>
+          ))}
         </div>
-      </motion.section>
+
+        {/* ── Divider ── */}
+        <div className={`h-px mb-12 ${darkMode ? "bg-gradient-to-r from-blue-500/20 via-purple-500/10 to-transparent" : "bg-gradient-to-r from-blue-200/60 via-purple-200/30 to-transparent"}`} />
+
+        {/* ── GitHub Stats ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          viewport={{ once: true }}
+        >
+          {/* Header */}
+          <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
+            <div className="flex items-center gap-2.5">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" className={darkMode ? "text-slate-500" : "text-slate-400"}>
+                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
+              </svg>
+              <span className={`w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse`} />
+              <span className={`text-[10px] font-semibold tracking-[0.18em] uppercase ${darkMode ? "text-slate-600" : "text-slate-400"}`}>
+                Live GitHub Activity
+              </span>
+            </div>
+            
+             <a
+  href={`https://github.com/${GITHUB_USERNAME}`}
+  target="_blank"
+  rel="noreferrer"
+  className={`text-[11px] transition-opacity hover:opacity-100 opacity-60 ${
+    darkMode ? "text-blue-400" : "text-blue-600"
+  }`}
+>
+  View profile →
+</a>
+          </div>
+
+          {error ? (
+            <p className={`text-sm ${darkMode ? "text-slate-600" : "text-slate-400"}`}>
+              Could not load GitHub data — check username or API rate limit.
+            </p>
+          ) : (
+            <>
+              {/* Stat cards */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+                {loading
+                  ? Array.from({ length: 4 }).map((_, i) => (
+                      <div key={i} className={`rounded-xl p-4 border ${darkMode ? "bg-white/[0.03] border-white/[0.06]" : "bg-black/[0.03] border-black/[0.07]"}`}>
+                        <Skeleton w="56px" h="26px" />
+                        <div className="mt-1.5"><Skeleton w="72px" h="10px" /></div>
+                      </div>
+                    ))
+                  : statCards.map(({ val, label, color }) => (
+                      <motion.div
+                        key={label}
+                        whileHover={{ y: -2 }}
+                        className={`rounded-xl p-4 border transition-colors ${darkMode ? "bg-white/[0.03] border-white/[0.06] hover:border-blue-500/25" : "bg-black/[0.02] border-black/[0.07] hover:border-blue-400/30"}`}
+                      >
+                        <div className={`text-[26px] font-extrabold tracking-tight leading-none mb-1 bg-gradient-to-br ${color} bg-clip-text text-transparent`}>
+                          {val}
+                        </div>
+                        <div className={`text-[10px] font-medium uppercase tracking-[0.1em] ${darkMode ? "text-slate-600" : "text-slate-400"}`}>
+                          {label}
+                        </div>
+                      </motion.div>
+                    ))}
+              </div>
+
+              {/* Top Languages */}
+              <div className="mb-8">
+                <span className={`text-[10px] font-semibold tracking-[0.18em] uppercase block mb-3 ${darkMode ? "text-slate-600" : "text-slate-400"}`}>
+                  Top Languages
+                </span>
+                <div className="flex flex-wrap gap-2">
+                  {loading
+                    ? Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} w="80px" h="28px" />)
+                    : ghData.topLangs.map(([lang]) => (
+                        <motion.div
+                          key={lang}
+                          whileHover={{ y: -2 }}
+                          className={`inline-flex items-center gap-1.5 text-[11px] font-medium px-3 py-1.5 rounded-md border ${darkMode ? "bg-white/[0.04] border-white/[0.08] text-slate-500" : "bg-black/[0.03] border-black/[0.07] text-slate-500"}`}
+                        >
+                          <span className="w-2 h-2 rounded-full" style={{ background: LANG_COLORS[lang] || LANG_COLORS.default }} />
+                          {lang}
+                        </motion.div>
+                      ))}
+                </div>
+              </div>
+
+              {/* Push Activity */}
+  {/*<div>
+  <span
+    className={`text-[10px] font-semibold tracking-[0.18em] uppercase block mb-4 ${
+      darkMode ? "text-slate-600" : "text-slate-400"
+    }`}
+  >
+    Contribution Activity
+  </span>
+
+  {loading ? (
+    <div className="grid grid-cols-7 gap-[4px]">
+      {Array.from({ length: 98 }).map((_, i) => (
+        <div
+          key={i}
+          className="w-[12px] h-[12px] rounded-sm"
+          style={{ background: "rgba(255,255,255,0.05)" }}
+        />
+      ))}
+    </div>
+  ) : error ? (
+    <span className="text-xs opacity-60">Failed to load contributions</span>
+  ) : (
+    <div className="flex gap-[4px] overflow-x-auto pb-2">
+      
+      {Array.from({ length: Math.ceil(ghData?.contributions?.length / 7) }).map(
+        (_, weekIndex) => {
+          const week = ghData.contributions.slice(
+            weekIndex * 7,
+            weekIndex * 7 + 7
+          );
+
+          return (
+            <div key={weekIndex} className="flex flex-col gap-[4px]">
+              {week.map(({ date, count }) => {
+                const getColor = () => {
+                  if (count === 0)
+                    return darkMode ? "bg-gray-800" : "bg-gray-200";
+                  if (count < 3) return "bg-green-300";
+                  if (count < 6) return "bg-green-500";
+                  return "bg-green-700";
+                };
+
+                return (
+                  <motion.div
+                    key={date}
+                    title={`${date}: ${count} contribution${
+                      count !== 1 ? "s" : ""
+                    }`}
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.2 }}
+                    whileHover={{ scale: 1.3 }}
+                    className={`w-[12px] h-[12px] rounded-sm ${getColor()}`}
+                  />
+                );
+              })}
+            </div>
+          );
+        }
+      )}
+    </div>
+  )}
+</div>*/}
+            </>
+          )}
+        </motion.div>
+</div>
+    </motion.section>
 
       {/* Education Section */}
       <motion.section
