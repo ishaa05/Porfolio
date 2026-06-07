@@ -558,7 +558,7 @@ export default function Portfolio() {
       venue: "1st IEEE International Conference on Data Science and Intelligent Network Computing (ICDSINC), NIT Raipur",
       year: "2025",
       authors: "Isha Bamel, Purav Ahya, Prof. Siddhartha Chandra",
-      link: "",
+      link: "https://ieeexplore.ieee.org/abstract/document/11448178",
       certificate: "/ICDSINC.pdf",
       type: "Conference Paper"
     },
