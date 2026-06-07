@@ -1,7 +1,8 @@
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
-import { FaChalkboardTeacher, FaBrain, FaExternalLinkAlt, FaLinkedin, FaGithub, FaEnvelope, FaMoon, FaSun, FaBriefcase, FaGraduationCap, FaFlask, FaCode, FaBullhorn, FaStar, FaUniversity, FaBook, FaLaptopCode, FaTrophy, FaArrowRight, FaHeart, FaPaintBrush, FaCamera, FaMusic, FaHandHoldingHeart, FaDownload, FaPaperPlane, FaUser } from "react-icons/fa";
+import { FaChalkboardTeacher, FaBrain, FaExternalLinkAlt, FaLinkedin, FaGithub, FaEnvelope, FaMoon, FaSun, FaBriefcase, FaGraduationCap, FaFlask, FaCode, FaBullhorn, FaStar, FaUniversity, FaBook, FaLaptopCode, FaTrophy, FaArrowRight, FaHeart, FaPaintBrush, FaCamera, FaMusic, FaHandHoldingHeart, FaDownload, FaPaperPlane, FaUser,FaBars, FaTimes } from "react-icons/fa";
 import ibAvatar from "./assets/ib-avatar.svg";
+
 import {
   FaReact, FaJava, FaHtml5, FaCss3Alt, FaJs, FaPython, FaGitAlt, FaDocker
 } from "react-icons/fa";
@@ -432,6 +433,7 @@ export default function Portfolio() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [scrollY, setScrollY] = useState(0);
   const [isHeroVisible, setIsHeroVisible] = useState(true);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const heroRef = useRef(null);
 
   const scrollToSection = (id) => {
@@ -682,40 +684,88 @@ export default function Portfolio() {
           Isha Bamel
         </motion.h1>
 
-        <div className="hidden md:flex items-center gap-6">
-          {navItems.map((item, index) => (
-            <motion.button
-              key={item.id}
-              onClick={() => scrollToSection(item.id)}
-              className={`text-sm font-medium transition-colors relative group
-                ${darkMode ? "text-gray-300 hover:text-white" : "text-gray-700 hover:text-black"}
-              `}
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              whileHover={{ scale: 1.1 }}
-            >
-              {item.label}
-              <motion.span
-                className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 group-hover:w-full transition-all duration-300"
-              />
-            </motion.button>
-          ))}
+        <div className="flex items-center gap-3">
 
-          {/* Dark mode toggle */}
-          <motion.button
-            onClick={() => setDarkMode(!darkMode)}
-            className={`ml-2 p-2 rounded-full ${
-              darkMode ? "bg-yellow-400 text-gray-900" : "bg-gray-800 text-white"
-            }`}
-            whileHover={{ scale: 1.1, rotate: 180 }}
-            whileTap={{ scale: 0.9 }}
-            transition={{ type: "spring", stiffness: 300 }}
-          >
-            {darkMode ? <FaSun /> : <FaMoon />}
-          </motion.button>
-        </div>
-      </motion.nav>
+  {/* Desktop Navigation */}
+  <div className="hidden md:flex items-center gap-6">
+    {navItems.map((item, index) => (
+      <motion.button
+        key={item.id}
+        onClick={() => scrollToSection(item.id)}
+        className={`text-sm font-medium transition-colors relative group
+          ${darkMode ? "text-gray-300 hover:text-white" : "text-gray-700 hover:text-black"}
+        `}
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: index * 0.1 }}
+        whileHover={{ scale: 1.1 }}
+      >
+        {item.label}
+
+        <motion.span
+          className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 group-hover:w-full transition-all duration-300"
+        />
+      </motion.button>
+    ))}
+  </div>
+
+  {/* Dark Mode Toggle */}
+  <motion.button
+    onClick={() => setDarkMode(!darkMode)}
+    className={`p-2 rounded-full ${
+      darkMode
+        ? "bg-yellow-400 text-gray-900"
+        : "bg-gray-800 text-white"
+    }`}
+    whileHover={{ scale: 1.1, rotate: 180 }}
+    whileTap={{ scale: 0.9 }}
+    transition={{ type: "spring", stiffness: 300 }}
+  >
+    {darkMode ? <FaSun /> : <FaMoon />}
+  </motion.button>
+
+  {/* Mobile Hamburger */}
+  <motion.button
+    className={`md:hidden text-xl ${
+      darkMode ? "text-white" : "text-gray-800"
+    }`}
+    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+    whileTap={{ scale: 0.9 }}
+  >
+    {mobileMenuOpen ? <FaTimes /> : <FaBars />}
+  </motion.button>
+
+</div>
+</motion.nav>
+{mobileMenuOpen && (
+  <motion.div
+    initial={{ opacity: 0, y: -20 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0, y: -20 }}
+    className={`md:hidden sticky top-[80px] z-40 backdrop-blur-lg border-b ${
+      darkMode
+        ? "bg-gray-900/95 border-gray-800"
+        : "bg-white/95 border-gray-200"
+    }`}
+  >
+    {navItems.map((item) => (
+      <button
+        key={item.id}
+        onClick={() => {
+          scrollToSection(item.id);
+          setMobileMenuOpen(false);
+        }}
+        className={`block w-full text-left px-6 py-4 transition ${
+          darkMode
+            ? "hover:bg-gray-800 text-white"
+            : "hover:bg-gray-100 text-gray-900"
+        }`}
+      >
+        {item.label}
+      </button>
+    ))}
+  </motion.div>
+)}
 
       {/* Hero Section */}
       {/* Hero Section */}
@@ -725,7 +775,7 @@ export default function Portfolio() {
   initial={{ opacity: 0 }}
   animate={{ opacity: 1 }}
   transition={{ duration: 1 }}
-  className="grid md:grid-cols-2 gap-12 items-center h-screen p-10 relative"
+  className="grid md:grid-cols-2 gap-12 items-center min-h-screen py-24 px-6"
 >
 
   {/* LEFT COLUMN */}
