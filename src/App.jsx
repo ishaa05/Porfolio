@@ -775,7 +775,7 @@ export default function Portfolio() {
   initial={{ opacity: 0 }}
   animate={{ opacity: 1 }}
   transition={{ duration: 1 }}
-  className="grid md:grid-cols-2 gap-12 items-center min-h-screen py-24 px-6"
+  className="relative grid md:grid-cols-2 gap-12 items-center min-h-screen py-24 px-6"
 >
 
   {/* LEFT COLUMN */}
@@ -961,7 +961,7 @@ export default function Portfolio() {
   </div>
   {/* Scroll Indicator */}
   <motion.div
-    className="absolute bottom-16 left-1/2 -translate-x-1/2 flex flex-col items-center z-20"
+    className="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center z-50"
     animate={{ y: [-6, 6] }}
     transition={{
       duration: 1.5,
