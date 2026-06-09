@@ -2,7 +2,7 @@ import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 import { FaChalkboardTeacher, FaBrain, FaExternalLinkAlt, FaLinkedin, FaGithub, FaEnvelope, FaMoon, FaSun, FaBriefcase, FaGraduationCap, FaFlask, FaCode, FaBullhorn, FaStar, FaUniversity, FaBook, FaLaptopCode, FaTrophy, FaArrowRight, FaHeart, FaPaintBrush, FaCamera, FaMusic, FaHandHoldingHeart, FaDownload, FaPaperPlane, FaUser,FaBars, FaTimes } from "react-icons/fa";
 import ibAvatar from "./assets/ib-avatar.svg";
-
+import { TypeAnimation } from "react-type-animation";
 import {
   FaReact, FaJava, FaHtml5, FaCss3Alt, FaJs, FaPython, FaGitAlt, FaDocker
 } from "react-icons/fa";
@@ -16,6 +16,7 @@ import { FaAws } from "react-icons/fa";
 import { FaMapMarkerAlt, FaFileAlt } from "react-icons/fa";
 import Pic from "./assets/image1.jpeg";
 import { SiGooglescholar } from "react-icons/si";
+import CountUp from "react-countup";
 const profileImage = ibAvatar;
 const profilepic = ibAvatar;
 // Placeholder for profile image - replace with your actual image
@@ -897,39 +898,88 @@ export default function Portfolio() {
   <div className="text-center md:text-left">
 
     {/* Heading */}
-    <motion.h2
-      className="text-5xl md:text-7xl font-extrabold mb-4"
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-    >
-      <span className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
-        Hi, I am Isha Bamel!
-      </span>
-    </motion.h2>
+<motion.div
+  initial={{ opacity: 0, scale: 0.9 }}
+  animate={{ opacity: 1, scale: 1 }}
+>
+  <h2 className="text-5xl md:text-7xl font-extrabold mb-2">
+    <span className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
+      Hi, I'm Isha
+    </span>
+  </h2>
 
-    {/* Description */}
-    <motion.p
-      className="text-xl md:text-2xl mb-8 font-light max-w-xl"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-    >
-      Undergraduate researcher building machine learning and computer vision systems for real-world impact.
-    </motion.p>
+  <div className="text-2xl md:text-4xl font-semibold mb-6">
+    <span className={darkMode ? "text-gray-300" : "text-gray-700"}>
+      <TypeAnimation
+        sequence={[
+          "Researcher",
+          2000,
+          "Open Source Contributor",
+          2000,
+          "Computer Vision Enthusiast",
+          2000,
+          "Builder",
+          2000,
+        ]}
+        wrapper="span"
+        speed={50}
+        repeat={Infinity}
+      />
+    </span>
+  </div>
+</motion.div>
+
+{/* Description */}
+<motion.p
+  className="text-xl md:text-2xl mb-8 font-light max-w-xl"
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+>
+  Undergraduate researcher building machine learning and computer vision systems for real-world impact.
+</motion.p>
 
     {/* Button */}
-    <motion.a
-      href="/IshaBamel_Research_Resume.pdf"
-      className="inline-block px-8 py-4 rounded-full text-white bg-gradient-to-r from-blue-600 to-purple-600"
-      whileHover={{ scale: 1.05 }}
-    >
-      Download Resume
-    </motion.a>
-    {/* Social Links */}
+    {/* Button */}
+<motion.a
+  href="/IshaBamel_Research_Resume.pdf"
+  className="inline-block px-8 py-4 rounded-full text-white bg-gradient-to-r from-blue-600 to-purple-600"
+  whileHover={{ scale: 1.05 }}
+>
+  Download Resume
+</motion.a>
+
+{/* Stats */}
 <motion.div
-  className="flex gap-6 mt-8 justify-center md:justify-start"
+  className="grid grid-cols-3 gap-4 mt-8 mb-8 max-w-md"
   initial={{ opacity: 0, y: 20 }}
   animate={{ opacity: 1, y: 0 }}
-  transition={{ delay: 0.5 }}
+  transition={{ delay: 0.3 }}
+>
+  <div className="text-center">
+    <h3 className="text-2xl font-bold text-blue-500">
+      <CountUp end={3} duration={2} />+
+    </h3>
+    <p className="text-xs opacity-70">IEEE Papers</p>
+  </div>
+
+  <div className="text-center">
+    <h3 className="text-2xl font-bold text-purple-500">
+      <CountUp end={10} duration={2} />+
+    </h3>
+    <p className="text-xs opacity-70">Projects</p>
+  </div>
+
+  <div className="text-center">
+    <h3 className="text-2xl font-bold text-green-500">
+      <CountUp end={9.24} decimals={2} duration={2} />
+    </h3>
+    <p className="text-xs opacity-70">CGPA</p>
+  </div>
+</motion.div>
+
+{/* Social Links */}
+<motion.div
+  className="flex gap-6 mt-8 justify-center md:justify-start"
 >
   {[
     { icon: <FaLinkedin />, href: "https://www.linkedin.com/in/isha-bamel-b13916292/", color: "text-blue-500", name: "LinkedIn" },
